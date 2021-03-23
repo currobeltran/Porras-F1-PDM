@@ -20,4 +20,11 @@
     <string name="registro_2">Si no posee una cuenta de usuario, regístrese aquí</string>
     <string name="title_activity_registro">Registro</string>
     <string name="pantalla_registro">Introduzca el nombre de usuario y la contraseña de su nueva cuenta</string>
+    <string name="title_activity_pantalla_ligas">PantallaLigas</string>
+    <string name="contentAñadirLiga">Botón para entrar en una liga</string>
+    <string name="Texto_boton">Nombre de liga</string>
+    <string name="mis_ligas">Mis Ligas</string>
+    <string name="liga_de_prueba">Liga de prueba</string>
+    <string name="clasificacion">Ver clasificación</string>
+    <string name="realizar_porra">Realizar porra</string>
 </resources>

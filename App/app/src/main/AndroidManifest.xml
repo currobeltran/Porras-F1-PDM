@@ -9,10 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Prueba">
+        <activity android:name=".PantallaOpcionesLiga"></activity>
+        <activity
+            android:name=".PantallaLigas"
+            android:label="@string/title_activity_pantalla_ligas"
+            android:theme="@style/Theme.Prueba.NoActionBar" />
         <activity
             android:name=".Registro"
             android:label="@string/title_activity_registro"
-            android:theme="@style/Theme.Prueba.NoActionBar"></activity>
+            android:theme="@style/Theme.Prueba.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
