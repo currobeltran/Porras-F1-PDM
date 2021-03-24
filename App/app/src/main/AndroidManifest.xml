@@ -9,7 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Prueba">
-        <activity android:name=".PantallaOpcionesLiga"></activity>
+        <activity
+            android:name=".RealizarPorra"
+            android:theme="@style/Theme.Prueba.NoActionBar" />
+        <activity
+            android:name=".MenuPorras"
+            android:theme="@style/Theme.Prueba.NoActionBar" />
+        <activity
+            android:name=".Clasificacion"
+            android:theme="@style/Theme.Prueba.NoActionBar" />
+        <activity
+            android:name=".PantallaOpcionesLiga"
+            android:theme="@style/Theme.Prueba.NoActionBar" />
         <activity
             android:name=".PantallaLigas"
             android:label="@string/title_activity_pantalla_ligas"

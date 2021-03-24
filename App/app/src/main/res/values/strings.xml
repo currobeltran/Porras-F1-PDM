@@ -27,4 +27,18 @@
     <string name="liga_de_prueba">Liga de prueba</string>
     <string name="clasificacion">Ver clasificación</string>
     <string name="realizar_porra">Realizar porra</string>
+    <string name="nombre_liga">Nombre de liga</string>
+    <string name="que_desea_hacer">¿Qué desea hacer?</string>
+    <string name="clasificacion_titulo">Clasificación</string>
+    <string name="usuario_1">Usuario 1</string>
+    <string name="seleccion_porra">Seleccione una porra para realizar</string>
+    <string name="top_primeros_quali">Top 3 Clasificación</string>
+    <string name="top_carrera">Top 3 Carrera</string>
+    <string name="pit_stop_rapido">Pit Stop más rápido</string>
+    <string name="vuelta_rapida">¿Quién hará la vuelta rápida?</string>
+    <string name="top_escuderia_quali">Mejor escuderia clasificación</string>
+    <string name="mejor_escuderia_carrera">Mejor escuderia Carrera</string>
+    <string name="nombre_piloto">Nombre del Piloto</string>
+    <string name="valor_porra">Valor</string>
+    <string name="seleccionar_opcion">Seleccionar</string>
 </resources>

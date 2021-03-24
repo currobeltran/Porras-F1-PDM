@@ -72,6 +72,7 @@
             android:layout_width="202dp"
             android:layout_height="40dp"
             android:layout_marginTop="32dp"
+            android:onClick="opcionesLiga"
             android:text="@string/liga_de_prueba"
             app:backgroundTint="#009688"
             app:layout_constraintBottom_toBottomOf="parent"
