@@ -41,7 +41,7 @@
         android:layout_marginBottom="608dp"
         android:fontFamily="@font/roboto"
         android:text="@string/clasificacion_titulo"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
