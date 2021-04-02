@@ -18,21 +18,27 @@ class MenuPorras : AppCompatActivity() {
 
         if(idboton == findViewById<Button>(R.id.top3quali).id){
             intentrealizaporra.putExtra("Titulo","Elija su top 3 para la clasificación")
+            intentrealizaporra.putExtra("Modo", "TOP3QualiPiloto")
         }
         else if(idboton == findViewById<Button>(R.id.top3carrera).id){
             intentrealizaporra.putExtra("Titulo","Elija su top 3 para la carrera")
+            intentrealizaporra.putExtra("Modo", "TOP3CarreraPiloto")
         }
         else if(idboton == findViewById<Button>(R.id.pitstop).id){
             intentrealizaporra.putExtra("Titulo","Elija quien hará la parada más rápida")
+            intentrealizaporra.putExtra("Modo", "PitStop")
         }
         else if(idboton == findViewById<Button>(R.id.vueltarapida).id){
             intentrealizaporra.putExtra("Titulo","Elija quien hará la vuelta rápida")
+            intentrealizaporra.putExtra("Modo", "VueltaRapida")
         }
         else if(idboton == findViewById<Button>(R.id.escuderiaquali).id){
             intentrealizaporra.putExtra("Titulo","Elija la escudería que conseguirá la pole")
+            intentrealizaporra.putExtra("Modo", "TOPQualiEscuderia")
         }
         else if(idboton == findViewById<Button>(R.id.escuderiacarrera).id){
             intentrealizaporra.putExtra("Titulo","Elija la escudería que conseguirá la victoria")
+            intentrealizaporra.putExtra("Modo", "TOPCarreraEscuderia")
         }
 
         startActivity(intentrealizaporra)
