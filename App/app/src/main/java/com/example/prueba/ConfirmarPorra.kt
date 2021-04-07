@@ -14,11 +14,25 @@ class ConfirmarPorra : AppCompatActivity() {
         setContentView(R.layout.activity_confirmar_porra)
 
         var textoModo = findViewById<TextView>(R.id.modoPorra)
+        textoModo.textSize = 18.0f
         var textoOpcion = findViewById<TextView>(R.id.opciones)
+        textoOpcion.textSize = 15.0f
         modoPorra = intent.getStringExtra("Modo")!!
 
         if(modoPorra == "VueltaRapida"){
-            textoModo.text = "Piloto con la vuelta rápida de carrera:"
+            textoModo.text = "El piloto con la vuelta rápida de carrera será:"
+            textoOpcion.text = intent.getStringExtra("Opcion")
+        }
+        else if(modoPorra == "PitStop"){
+            textoModo.text = "El equipo con la parada más rápida será:"
+            textoOpcion.text = intent.getStringExtra("Opcion")
+        }
+        else if(modoPorra == "TOPQualiEscuderia"){
+            textoModo.text = "El equipo que se llevará la Pole Position será:"
+            textoOpcion.text = intent.getStringExtra("Opcion")
+        }
+        else if(modoPorra == "TOPCarreraEscuderia"){
+            textoModo.text = "El equipo que ganará la carrera será:"
             textoOpcion.text = intent.getStringExtra("Opcion")
         }
     }

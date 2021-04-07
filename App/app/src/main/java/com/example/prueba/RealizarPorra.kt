@@ -155,6 +155,9 @@ class RealizarPorra : AppCompatActivity() {
                     if(contador == 1){
                         boton.isClickable = true
                         boton.setBackgroundColor(getColor(R.color.teal_700))
+                        if(buttonView.isChecked){
+                            escuderiaSeleccionada = buttonView.text.toString()
+                        }
                     }
 
                     //Si se desmarca la escuderia, se vuelve a desactivar el boton
