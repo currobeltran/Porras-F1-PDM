@@ -42,4 +42,6 @@
     <string name="valor_porra">Valor</string>
     <string name="seleccionar_opcion">Seleccionar</string>
     <string name="Explicación_porra">Al lado de cada opción aparecerá el valor del acierto en la clasificación</string>
+    <string name="confirmaporra">¿Está seguro de la siguiente elección?</string>
+    <string name="continuar">Continuar</string>
 </resources>

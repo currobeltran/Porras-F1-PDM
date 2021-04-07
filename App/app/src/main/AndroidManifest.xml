@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.prueba">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -11,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Prueba"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ConfirmarPorra" android:theme="@style/Theme.Prueba.NoActionBar"/>
         <activity
             android:name=".RealizarPorra"
             android:theme="@style/Theme.Prueba.NoActionBar" />

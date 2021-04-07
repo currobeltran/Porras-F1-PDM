@@ -45,7 +45,7 @@ class PantallaLigas : AppCompatActivity() {
 
         //Peticion para obtener el ID de la ronda
         val peticion: Request = Request.Builder()
-                .url("http://192.168.1.17/?accion=obtenerronda&id=1")
+                .url("http://192.168.1.14/?accion=obtenerronda&id=1")
                 .build()
 
         val respuesta = cliente.newCall(peticion).enqueue(future)
@@ -57,7 +57,7 @@ class PantallaLigas : AppCompatActivity() {
 
         //Peticion para obtener la temporada
         val peticionTemporada: Request = Request.Builder()
-                .url("http://192.168.1.17/?accion=obtenertemporada&id=1")
+                .url("http://192.168.1.14/?accion=obtenertemporada&id=1")
                 .build()
         val respuestaTemporada = cliente.newCall(peticionTemporada).enqueue(futuretemporada)
 

@@ -1,22 +1,22 @@
 package com.example.prueba
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.core.view.marginRight
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
-import org.w3c.dom.Text
 
 class RealizarPorra : AppCompatActivity() {
+    var pilotoSeleccionado: String = ""
+    var escuderiaSeleccionada: String = ""
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +27,12 @@ class RealizarPorra : AppCompatActivity() {
         titulo.text = intent.getStringExtra("Titulo")
         var lay: LinearLayout = findViewById(R.id.layout_pilotos)
         val modo = intent.getStringExtra("Modo")
+        var contador = 0;
+
+        //Configuramos el boton para que no pueda ser pulsado hasta tener completada la porra
+        var boton: Button = findViewById(R.id.button9)
+        boton.isClickable = false
+        boton.setBackgroundColor(Color.GRAY)
 
         if (modo == "TOP3QualiPiloto" || modo == "TOP3CarreraPiloto" || modo == "VueltaRapida"){
             val jsonPilotos = ObtenerPilotos()
@@ -41,10 +47,54 @@ class RealizarPorra : AppCompatActivity() {
                 val parametros_layout = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 parametros_layout.setMargins(20,0,20,0)
 
-                var nombrePiloto: TextView = TextView(this)
-                nombrePiloto.text = piloto.getString("NOMBRE")
-                nombrePiloto.textSize = 18.0f
-                nombrePiloto.layoutParams = parametros_layout
+                var check = CheckBox(this)
+                check.text = piloto.getString("NOMBRE")
+                check.textSize = 18.0f
+                check.layoutParams = parametros_layout
+
+                //Con el siguiente listener evitamos que haya mas opciones marcadas de las esperadas
+                check.setOnCheckedChangeListener{buttonView, isChecked ->
+                    //Movemos contador
+                    if (isChecked){
+                        contador++
+                    }
+                    else{
+                        contador--
+                    }
+
+                    //Si se supera el límite, se revoca la accion
+                    if((modo == "TOP3QualiPiloto" || modo == "TOP3CarreraPiloto") && contador>3){
+                        buttonView.isChecked = false
+                        contador--
+                    }
+                    else if(contador>1 && modo == "VueltaRapida"){
+                        buttonView.isChecked = false
+                        contador--
+                    }
+
+                    //Si se tienen los pilotos seleccionados, se activa el boton de realizar porra
+                    if((modo == "TOP3QualiPiloto" || modo == "TOP3CarreraPiloto") && contador==3){
+                        boton.isClickable = true
+                        boton.setBackgroundColor(getColor(R.color.teal_700))
+                    }
+                    else if(contador == 1 && modo == "VueltaRapida"){
+                        pilotoSeleccionado = buttonView.text.toString()
+                        Log.i("COMPROBANDO PILOTO", pilotoSeleccionado)
+                        boton.isClickable = true
+                        boton.setBackgroundColor(getColor(R.color.teal_700))
+                    }
+
+                    //Si los valores anteriores se incumplen, se vuelve a desactivar el boton
+                    if((modo == "TOP3QualiPiloto" || modo == "TOP3CarreraPiloto") && contador!=3){
+                        boton.isClickable = false
+                        boton.setBackgroundColor(Color.GRAY)
+                    }
+                    else if(contador != 1 && modo == "VueltaRapida"){
+                        boton.isClickable = false
+                        boton.setBackgroundColor(Color.GRAY)
+                    }
+                    Log.i("CONTADOR",contador.toString())
+                }
 
                 var valorPiloto: TextView = TextView(this)
                 if(modo == "TOP3QualiPiloto"){
@@ -59,11 +109,8 @@ class RealizarPorra : AppCompatActivity() {
                 valorPiloto.textSize = 18.0f
                 valorPiloto.layoutParams = parametros_layout
 
-                var check = CheckBox(this)
-
-                lay2.addView(nombrePiloto)
-                lay2.addView(valorPiloto)
                 lay2.addView(check)
+                lay2.addView(valorPiloto)
             }
         }
         else{
@@ -79,12 +126,56 @@ class RealizarPorra : AppCompatActivity() {
                 val parametros_layout = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
                 parametros_layout.setMargins(20,0,20,0)
 
-                var nombreescuderia: TextView = TextView(this)
-                nombreescuderia.text = escuderia.getString("NOMBRE")
-                nombreescuderia.textSize = 18.0f
-                nombreescuderia.layoutParams = parametros_layout
-                
-                //TODO: Colocar la información de la BBDD en los TextView correspondientes
+                var check = CheckBox(this)
+                check.text = escuderia.getString("NOMBRE")
+                check.textSize = 18.0f
+                check.layoutParams = parametros_layout
+
+                //Con el siguiente listener evitamos que haya mas opciones marcadas de las esperadas
+                check.setOnCheckedChangeListener{buttonView, isChecked ->
+                    //Movemos contador
+                    if (isChecked){
+                        contador++
+                    }
+                    else{
+                        contador--
+                    }
+
+                    //Si se supera el límite, revocamos la acción
+                    if(contador>1){
+                        buttonView.isChecked = false
+                        contador--
+                    }
+
+                    //Si se tiene la escuderia seleccionada, se habilita el boton de realizar porra
+                    if(contador == 1){
+                        boton.isClickable = true
+                        boton.setBackgroundColor(getColor(R.color.teal_700))
+                    }
+
+                    //Si se desmarca la escuderia, se vuelve a desactivar el boton
+                    if(contador!=1){
+                        boton.isClickable = false
+                        boton.setBackgroundColor(Color.GRAY)
+                    }
+                    Log.i("CONTADOR",contador.toString())
+                }
+
+                var valorEscuderia: TextView = TextView(this)
+                if(modo == "PitStop"){
+                    valorEscuderia.text = escuderia.getString("VALORPITSTOP")
+                }
+                else if(modo == "TOPQualiEscuderia"){
+                    valorEscuderia.text = escuderia.getString("VALORCLASIFICACION")
+                }
+                else{
+                    valorEscuderia.text = escuderia.getString("VALORCARRERA")
+                }
+                valorEscuderia.textSize = 18.0f
+                valorEscuderia.layoutParams = parametros_layout
+
+                lay2.addView(check)
+                lay2.addView(valorEscuderia)
             }
         }
     }
@@ -97,13 +188,13 @@ class RealizarPorra : AppCompatActivity() {
 
         //Se divide en 2 peticiones porque en 1 se sobrecarga el buffer de lectura
         val peticion: Request = Request.Builder()
-                .url("http://192.168.1.17/?accion=obtenerpilotos&from=1&to=10")
+                .url("http://192.168.1.14/?accion=obtenerpilotos&from=1&to=10")
                 .build()
         val respuesta = cliente.newCall(peticion).enqueue(future)
         var primeraparte: JSONArray = JSONArray(future.get()!!.body()!!.string())
 
         val peticion2: Request = Request.Builder()
-                .url("http://192.168.1.17/?accion=obtenerpilotos&from=11&to=20")
+                .url("http://192.168.1.14/?accion=obtenerpilotos&from=11&to=20")
                 .build()
         val respuesta2 = cliente.newCall(peticion2).enqueue(future2)
         val segundaparte: JSONArray = JSONArray(future2.get()!!.body()!!.string())
@@ -121,10 +212,16 @@ class RealizarPorra : AppCompatActivity() {
         val future = CallbackFuture()
 
         val peticion: Request = Request.Builder()
-                .url("http://192.168.1.17/?accion=obtenerescuderias")
+                .url("http://192.168.1.14/?accion=obtenerescuderias")
                 .build()
         val respuesta = cliente.newCall(peticion).enqueue(future)
 
         return JSONArray(future.get()!!.body()!!.string())
+    }
+
+    fun botonRealizarPorra(view: View){
+        val intentConfirmarPorra = Intent(this, ConfirmarPorra::class.java)
+
+        startActivity(intentConfirmarPorra)
     }
 }
