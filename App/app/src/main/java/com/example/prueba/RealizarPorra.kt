@@ -17,6 +17,7 @@ import org.json.JSONArray
 class RealizarPorra : AppCompatActivity() {
     var pilotoSeleccionado: String = ""
     var escuderiaSeleccionada: String = ""
+    var modoPorra: String = ""
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class RealizarPorra : AppCompatActivity() {
         titulo.text = intent.getStringExtra("Titulo")
         var lay: LinearLayout = findViewById(R.id.layout_pilotos)
         val modo = intent.getStringExtra("Modo")
+        modoPorra = modo.toString()
         var contador = 0;
 
         //Configuramos el boton para que no pueda ser pulsado hasta tener completada la porra
@@ -78,7 +80,9 @@ class RealizarPorra : AppCompatActivity() {
                         boton.setBackgroundColor(getColor(R.color.teal_700))
                     }
                     else if(contador == 1 && modo == "VueltaRapida"){
-                        pilotoSeleccionado = buttonView.text.toString()
+                        if(buttonView.isChecked){
+                            pilotoSeleccionado = buttonView.text.toString()
+                        }
                         Log.i("COMPROBANDO PILOTO", pilotoSeleccionado)
                         boton.isClickable = true
                         boton.setBackgroundColor(getColor(R.color.teal_700))
@@ -221,6 +225,17 @@ class RealizarPorra : AppCompatActivity() {
 
     fun botonRealizarPorra(view: View){
         val intentConfirmarPorra = Intent(this, ConfirmarPorra::class.java)
+        intentConfirmarPorra.putExtra("Modo", modoPorra)
+
+        if(modoPorra == "VueltaRapida"){
+            intentConfirmarPorra.putExtra("Opcion", pilotoSeleccionado)
+        }
+        else if(modoPorra == "PitStop" || modoPorra == "TOPQualiEscuderia" || modoPorra == "TOPCarreraEscuderia"){
+            intentConfirmarPorra.putExtra("Opcion", escuderiaSeleccionada)
+        }
+        else{
+
+        }
 
         startActivity(intentConfirmarPorra)
     }
