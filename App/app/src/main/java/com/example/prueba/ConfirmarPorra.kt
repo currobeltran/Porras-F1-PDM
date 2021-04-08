@@ -35,5 +35,15 @@ class ConfirmarPorra : AppCompatActivity() {
             textoModo.text = "El equipo que ganará la carrera será:"
             textoOpcion.text = intent.getStringExtra("Opcion")
         }
+        else if(modoPorra == "TOP3QualiPiloto"){
+            val pilotos: ArrayList<String> = intent.getStringArrayListExtra("Opcion") as ArrayList<String>
+            textoModo.text = "El top 3 de pilotos en clasificación serán: "
+            textoOpcion.text = pilotos[0] + "\n" + pilotos[1] + "\n" + pilotos[2]
+        }
+        else if(modoPorra == "TOP3CarreraPiloto"){
+            val pilotos: ArrayList<String> = intent.getStringArrayListExtra("Opcion") as ArrayList<String>
+            textoModo.text = "El top 3 de pilotos en carrera serán: "
+            textoOpcion.text = pilotos[0] + "\n" + pilotos[1] + "\n" + pilotos[2]
+        }
     }
 }

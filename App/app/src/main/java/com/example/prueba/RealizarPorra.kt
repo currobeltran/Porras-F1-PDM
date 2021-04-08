@@ -18,6 +18,7 @@ class RealizarPorra : AppCompatActivity() {
     var pilotoSeleccionado: String = ""
     var escuderiaSeleccionada: String = ""
     var modoPorra: String = ""
+    var podio: ArrayList<String> = arrayListOf(" ", " ", " ")
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +30,7 @@ class RealizarPorra : AppCompatActivity() {
         var lay: LinearLayout = findViewById(R.id.layout_pilotos)
         val modo = intent.getStringExtra("Modo")
         modoPorra = modo.toString()
-        var contador = 0;
+        var contador = 0
 
         //Configuramos el boton para que no pueda ser pulsado hasta tener completada la porra
         var boton: Button = findViewById(R.id.button9)
@@ -56,12 +57,23 @@ class RealizarPorra : AppCompatActivity() {
 
                 //Con el siguiente listener evitamos que haya mas opciones marcadas de las esperadas
                 check.setOnCheckedChangeListener{buttonView, isChecked ->
+                    val nombreOpcion = buttonView.text.toString()
+
                     //Movemos contador
                     if (isChecked){
+                        //Este if nos ayudará a introducir elementos en el array podio
+                        if(contador<3){
+                            val indice = podio.indexOfFirst { it == " " }
+                            if(indice != -1){
+                                podio[indice] = nombreOpcion
+                            }
+                        }
                         contador++
                     }
                     else{
                         contador--
+                        val indice = podio.indexOf(nombreOpcion)
+                        podio[indice] = " "
                     }
 
                     //Si se supera el límite, se revoca la accion
@@ -81,9 +93,8 @@ class RealizarPorra : AppCompatActivity() {
                     }
                     else if(contador == 1 && modo == "VueltaRapida"){
                         if(buttonView.isChecked){
-                            pilotoSeleccionado = buttonView.text.toString()
+                            pilotoSeleccionado = nombreOpcion
                         }
-                        Log.i("COMPROBANDO PILOTO", pilotoSeleccionado)
                         boton.isClickable = true
                         boton.setBackgroundColor(getColor(R.color.teal_700))
                     }
@@ -237,7 +248,7 @@ class RealizarPorra : AppCompatActivity() {
             intentConfirmarPorra.putExtra("Opcion", escuderiaSeleccionada)
         }
         else{
-
+            intentConfirmarPorra.putExtra("Opcion", podio)
         }
 
         startActivity(intentConfirmarPorra)
