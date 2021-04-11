@@ -91,4 +91,20 @@ class PantallaLigas : AppCompatActivity() {
 
         return infocarrera
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun siguienteGranPremio(view: View){
+        val cliente: OkHttpClient = OkHttpClient()
+        val future = CallbackFuture()
+        val numeroRondaActual = idRonda.toInt()
+        val siguienteRonda = numeroRondaActual + 1
+
+        val peticion: Request = Request.Builder()
+                .url("http://192.168.1.14/?accion=cambiaronda&idliga=1&ronda=$siguienteRonda")
+                .build()
+
+        val respuesta = cliente.newCall(peticion).enqueue(future)
+
+        this.recreate()
+    }
 }
