@@ -19,11 +19,15 @@ class RealizarPorra : AppCompatActivity() {
     var escuderiaSeleccionada: String = ""
     var modoPorra: String = ""
     var podio: ArrayList<String> = arrayListOf(" ", " ", " ")
+    var idRonda = -1
+    var temporada = -1
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_realizar_porra)
+        idRonda = intent.getIntExtra("IDRonda", -1)
+        temporada = intent.getIntExtra("Temporada",-1)
 
         val titulo = findViewById<TextView>(R.id.textView14)
         titulo.text = intent.getStringExtra("Titulo")
@@ -240,6 +244,8 @@ class RealizarPorra : AppCompatActivity() {
     fun botonRealizarPorra(view: View){
         val intentConfirmarPorra = Intent(this, ConfirmarPorra::class.java)
         intentConfirmarPorra.putExtra("Modo", modoPorra)
+        intentConfirmarPorra.putExtra("IDRonda", idRonda)
+        intentConfirmarPorra.putExtra("Temporada", temporada)
 
         if(modoPorra == "VueltaRapida"){
             intentConfirmarPorra.putExtra("Opcion", pilotoSeleccionado)

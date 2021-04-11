@@ -50,6 +50,7 @@
         android:layout_width="164dp"
         android:layout_height="40dp"
         android:layout_marginBottom="84dp"
+        android:onClick="enviarPorra"
         android:text="@string/continuar"
         app:backgroundTint="@color/teal_700"
         app:layout_constraintBottom_toBottomOf="parent"
