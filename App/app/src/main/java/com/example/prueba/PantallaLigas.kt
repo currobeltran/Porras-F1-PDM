@@ -27,6 +27,7 @@ class PantallaLigas : AppCompatActivity() {
 
     fun opcionesLiga(view: View){
         val intentopcionesliga = Intent(this, PantallaOpcionesLiga::class.java)
+        intentopcionesliga.putExtra("IDLiga", 1)
 
         startActivity(intentopcionesliga)
     }

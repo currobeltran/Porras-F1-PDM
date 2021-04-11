@@ -49,14 +49,20 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar3"
         app:layout_constraintVertical_bias="0.962" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="320dp"
-        android:layout_height="525dp"
-        android:layout_marginTop="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ScrollView
+        android:id="@+id/scrollclasificacion"
+        android:layout_width="306dp"
+        android:layout_height="481dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView9">
+
+        <LinearLayout
+            android:id="@+id/layoutclasificacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
