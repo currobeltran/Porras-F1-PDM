@@ -2,24 +2,25 @@ package com.example.prueba
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
-import org.w3c.dom.Text
+
 
 class ConfirmarPorra : AppCompatActivity() {
     var modoPorra: String = ""
     var opcionElegida: String = ""
+    var pilotos: ArrayList<String> = arrayListOf()
     var idRonda = -1
     var temporada = -1
-    var puntos = 0
+    var puntos = 0.0
     var idUser = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +58,12 @@ class ConfirmarPorra : AppCompatActivity() {
             opcionElegida = textoOpcion.text.toString()
         }
         else if(modoPorra == "TOP3QualiPiloto"){
-            val pilotos: ArrayList<String> = intent.getStringArrayListExtra("Opcion") as ArrayList<String>
+            pilotos = intent.getStringArrayListExtra("Opcion") as ArrayList<String>
             textoModo.text = "El top 3 de pilotos en clasificación serán: "
             textoOpcion.text = pilotos[0] + "\n" + pilotos[1] + "\n" + pilotos[2]
         }
         else if(modoPorra == "TOP3CarreraPiloto"){
-            val pilotos: ArrayList<String> = intent.getStringArrayListExtra("Opcion") as ArrayList<String>
+            pilotos = intent.getStringArrayListExtra("Opcion") as ArrayList<String>
             textoModo.text = "El top 3 de pilotos en carrera serán: "
             textoOpcion.text = pilotos[0] + "\n" + pilotos[1] + "\n" + pilotos[2]
         }
@@ -73,8 +74,6 @@ class ConfirmarPorra : AppCompatActivity() {
         val cliente = OkHttpClient()
         val future = CallbackFuture()
         val future2 = CallbackFuture()
-        val futureDatosUser = CallbackFuture()
-        val futureEditaPuntos = CallbackFuture()
 
         if(modoPorra == "VueltaRapida"){
             val request = Request.Builder()
@@ -110,24 +109,10 @@ class ConfirmarPorra : AppCompatActivity() {
 
                 val response2 = cliente.newCall(requestPuntosPiloto).enqueue(future2)
                 val json2 = JSONArray(future2.get()!!.body()!!.string())
-                val puntos = json2.getJSONObject(0)
+                puntos = json2.getJSONObject(0)
                         .getDouble("VALORVUELTARAPIDA")
 
-                //Obtenemos los puntos del usuario
-                val requestPuntosUsuario = Request.Builder()
-                        .url("http://192.168.1.14/?accion=obtenerusuariobyid&iduser=$idUser")
-                        .build()
-                val responsePuntosUsuario = cliente.newCall(requestPuntosUsuario).enqueue(futureDatosUser)
-                val jsonDatosUser = JSONArray(futureDatosUser.get()!!.body()!!.string())
-                val puntosActuales = jsonDatosUser.getJSONObject(0)
-                        .getDouble("Puntos")
-
-                //Calculamos los nuevos puntos y modificamos
-                val nuevosPuntos: Double = puntos + puntosActuales
-                val requestModificaPuntos = Request.Builder()
-                        .url("http://192.168.1.14/?accion=modificarpuntosusuario&iduser=$idUser&puntos=$nuevosPuntos")
-                        .build()
-                val responseModificaPuntos = cliente.newCall(requestModificaPuntos).enqueue(futureEditaPuntos)
+                modificaPuntosUsuario()
             }
         }
         else if(modoPorra == "PitStop"){
@@ -151,7 +136,16 @@ class ConfirmarPorra : AppCompatActivity() {
 
             Log.i("PETICION QUALIESC", escuderia)
             if(escuderia == opcionElegida){
+                val requestPuntosEscuderia = Request.Builder()
+                        .url("http://192.168.1.14/?accion=obtenerescuderianombre&nombre=$opcionElegida")
+                        .build()
 
+                val response2 = cliente.newCall(requestPuntosEscuderia).enqueue(future2)
+                val json2 = JSONArray(future2.get()!!.body()!!.string())
+                puntos = json2.getJSONObject(0)
+                        .getDouble("VALORCLASIFICACION")
+
+                modificaPuntosUsuario()
             }
         }
         else if(modoPorra == "TOPCarreraEscuderia"){
@@ -172,19 +166,147 @@ class ConfirmarPorra : AppCompatActivity() {
 
             Log.i("PETICION CARRERAESC", escuderia)
             if(escuderia == opcionElegida){
-                
+                val requestPuntosEscuderia = Request.Builder()
+                        .url("http://192.168.1.14/?accion=obtenerescuderianombre&nombre=$opcionElegida")
+                        .build()
+
+                val response2 = cliente.newCall(requestPuntosEscuderia).enqueue(future2)
+                val json2 = JSONArray(future2.get()!!.body()!!.string())
+                puntos = json2.getJSONObject(0)
+                        .getDouble("VALORCARRERA")
+
+                modificaPuntosUsuario()
             }
         }
         else if(modoPorra == "TOP3QualiPiloto"){
+            var resultadoQuali: ArrayList<String> = arrayListOf(" ", " ", " ")
 
+            //Obtenemos el resultado de la clasificación
+            for(i in 1 until 4){
+                val futureAux = CallbackFuture()
+                val request = Request.Builder()
+                        .url("http://ergast.com/api/f1/$temporada/$idRonda/qualifying/$i.json")
+                        .build()
+
+                val response = cliente.newCall(request).enqueue(futureAux)
+                val json: JSONObject = JSONObject(futureAux.get()!!.body()!!.string())
+                val nombrePiloto = json.getJSONObject("MRData")
+                        .getJSONObject("RaceTable")
+                        .getJSONArray("Races")
+                        .getJSONObject(0)
+                        .getJSONArray("QualifyingResults")
+                        .getJSONObject(0)
+                        .getJSONObject("Driver")
+                        .getString("givenName") + " " + json.getJSONObject("MRData")
+                        .getJSONObject("RaceTable")
+                        .getJSONArray("Races")
+                        .getJSONObject(0)
+                        .getJSONArray("QualifyingResults")
+                        .getJSONObject(0)
+                        .getJSONObject("Driver")
+                        .getString("familyName")
+
+                Log.i("NOMBRE PILOTO", nombrePiloto)
+                resultadoQuali[i-1] = nombrePiloto
+            }
+
+            //Comparamos vectores
+            for(i in 0 until resultadoQuali.size){
+                for(j in 0 until pilotos.size){
+                    if(resultadoQuali[i] == pilotos[j]){
+                        val futureAux2 = CallbackFuture()
+                        val requestPuntosPiloto = Request.Builder()
+                                .url("http://192.168.1.14/?accion=obtenerpilotonombre&nombre=${pilotos[j]}")
+                                .build()
+
+                        val response2 = cliente.newCall(requestPuntosPiloto).enqueue(futureAux2)
+                        val json2 = JSONArray(futureAux2.get()!!.body()!!.string())
+                        puntos = json2.getJSONObject(0)
+                                .getDouble("VALORCLASIFICACION")
+
+                        modificaPuntosUsuario()
+                    }
+                }
+            }
         }
         else if(modoPorra == "TOP3CarreraPiloto"){
+            var resultadoCarrera: ArrayList<String> = arrayListOf(" ", " ", " ")
 
+            //Obtenemos el resultado de la carrera
+            for(i in 1 until 4){
+                val futureAux = CallbackFuture()
+                val request = Request.Builder()
+                        .url("http://ergast.com/api/f1/$temporada/$idRonda/results/$i.json")
+                        .build()
+
+                val response = cliente.newCall(request).enqueue(futureAux)
+                val json: JSONObject = JSONObject(futureAux.get()!!.body()!!.string())
+                val nombrePiloto = json.getJSONObject("MRData")
+                        .getJSONObject("RaceTable")
+                        .getJSONArray("Races")
+                        .getJSONObject(0)
+                        .getJSONArray("Results")
+                        .getJSONObject(0)
+                        .getJSONObject("Driver")
+                        .getString("givenName") + " " + json.getJSONObject("MRData")
+                        .getJSONObject("RaceTable")
+                        .getJSONArray("Races")
+                        .getJSONObject(0)
+                        .getJSONArray("Results")
+                        .getJSONObject(0)
+                        .getJSONObject("Driver")
+                        .getString("familyName")
+
+                Log.i("NOMBRE PILOTO", nombrePiloto)
+                resultadoCarrera[i-1] = nombrePiloto
+            }
+
+            //Comparamos vectores
+            for(i in 0 until resultadoCarrera.size){
+                for(j in 0 until pilotos.size){
+                    if(resultadoCarrera[i] == pilotos[j]){
+                        val futureAux2 = CallbackFuture()
+                        val requestPuntosPiloto = Request.Builder()
+                                .url("http://192.168.1.14/?accion=obtenerpilotonombre&nombre=${pilotos[j]}")
+                                .build()
+
+                        val response2 = cliente.newCall(requestPuntosPiloto).enqueue(futureAux2)
+                        val json2 = JSONArray(futureAux2.get()!!.body()!!.string())
+                        puntos = json2.getJSONObject(0)
+                                .getDouble("VALORCARRERA")
+
+                        modificaPuntosUsuario()
+                    }
+                }
+            }
         }
 
         val volverPantallaLigas = Intent(this, PantallaLigas::class.java)
         volverPantallaLigas.putExtra("CambiaGP", true)
 
         startActivity(volverPantallaLigas)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun modificaPuntosUsuario(){
+        val cliente = OkHttpClient()
+        val futureDatosUser = CallbackFuture()
+        val futureEditaPuntos = CallbackFuture()
+
+        //Obtenemos los puntos del usuario
+        val requestPuntosUsuario = Request.Builder()
+                .url("http://192.168.1.14/?accion=obtenerusuariobyid&iduser=$idUser")
+                .build()
+        val responsePuntosUsuario = cliente.newCall(requestPuntosUsuario).enqueue(futureDatosUser)
+        val jsonDatosUser = JSONArray(futureDatosUser.get()!!.body()!!.string())
+        val puntosActuales = jsonDatosUser.getJSONObject(0)
+                .getDouble("Puntos")
+
+        //Calculamos los nuevos puntos y modificamos
+        val nuevosPuntos: Double = puntos + puntosActuales
+        val requestModificaPuntos = Request.Builder()
+                .url("http://192.168.1.14/?accion=modificarpuntosusuario&iduser=$idUser&puntos=$nuevosPuntos")
+                .build()
+        val responseModificaPuntos = cliente.newCall(requestModificaPuntos).enqueue(futureEditaPuntos)
     }
 }
