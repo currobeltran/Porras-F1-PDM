@@ -9,12 +9,14 @@ import android.widget.Button
 class MenuPorras : AppCompatActivity() {
     var idRonda = -1
     var temporada = -1
+    var idUser = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu_porras)
         idRonda = intent.getIntExtra("IDRonda", -1)
         temporada = intent.getIntExtra("Temporada", -1)
+        idUser = intent.getIntExtra("Usuario", -1)
     }
 
     fun realizaPorra(view: View){
@@ -22,6 +24,7 @@ class MenuPorras : AppCompatActivity() {
         val idboton = view.id
         intentrealizaporra.putExtra("IDRonda", idRonda)
         intentrealizaporra.putExtra("Temporada", temporada)
+        intentrealizaporra.putExtra("Usuario", idUser)
 
         if(idboton == findViewById<Button>(R.id.top3quali).id){
             intentrealizaporra.putExtra("Titulo","Elija su top 3 para la clasificación")

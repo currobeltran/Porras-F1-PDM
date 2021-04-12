@@ -15,12 +15,20 @@ import org.json.JSONObject
 class PantallaLigas : AppCompatActivity() {
     var idRonda: String = ""
     var temporada: String = ""
+    //Se establece este valor para acceder siempre a la información del usuario 1
+    //No se implementará la dinámica de usuario
+    var idUser: Int = 1
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var infocarrera = obtenerSiguienteRonda()
+
+        if(intent.getBooleanExtra("CambiaGP", false)){
+            pasarGP()
+        }
+
         setContentView(R.layout.activity_pantalla_ligas)
-        val infocarrera = obtenerSiguienteRonda()
         val textocarrera = findViewById<TextView>(R.id.SiguienteCarrera)
         textocarrera.text = infocarrera
     }
@@ -30,6 +38,7 @@ class PantallaLigas : AppCompatActivity() {
         intentopcionesliga.putExtra("IDLiga", 1)
         intentopcionesliga.putExtra("IDRonda", idRonda.toInt())
         intentopcionesliga.putExtra("Temporada", temporada.toInt())
+        intentopcionesliga.putExtra("Usuario", idUser)
 
         startActivity(intentopcionesliga)
     }
@@ -96,6 +105,11 @@ class PantallaLigas : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun siguienteGranPremio(view: View){
+        pasarGP()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun pasarGP(){
         val cliente: OkHttpClient = OkHttpClient()
         val future = CallbackFuture()
         val numeroRondaActual = idRonda.toInt()
@@ -105,8 +119,10 @@ class PantallaLigas : AppCompatActivity() {
                 .url("http://192.168.1.14/?accion=cambiaronda&idliga=1&ronda=$siguienteRonda")
                 .build()
 
+        Log.i("AVANZARONDA", siguienteRonda.toString())
         val respuesta = cliente.newCall(peticion).enqueue(future)
 
-        this.recreate()
+        val recreandoActividad = Intent(this, PantallaLigas::class.java)
+        startActivity(recreandoActividad)
     }
 }

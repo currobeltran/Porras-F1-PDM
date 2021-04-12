@@ -1,5 +1,6 @@
 package com.example.prueba
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,12 +20,15 @@ class ConfirmarPorra : AppCompatActivity() {
     var idRonda = -1
     var temporada = -1
     var puntos = 0
+    var idUser = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_confirmar_porra)
         idRonda = intent.getIntExtra("IDRonda", -1)
         temporada = intent.getIntExtra("Temporada", -1)
+        idUser = intent.getIntExtra("Usuario", -1)
+        Log.i("IDUSUARIO", idUser.toString())
 
         var textoModo = findViewById<TextView>(R.id.modoPorra)
         textoModo.textSize = 18.0f
@@ -69,6 +73,8 @@ class ConfirmarPorra : AppCompatActivity() {
         val cliente = OkHttpClient()
         val future = CallbackFuture()
         val future2 = CallbackFuture()
+        val futureDatosUser = CallbackFuture()
+        val futureEditaPuntos = CallbackFuture()
 
         if(modoPorra == "VueltaRapida"){
             val request = Request.Builder()
@@ -94,7 +100,10 @@ class ConfirmarPorra : AppCompatActivity() {
                             .getString("familyName")
 
             Log.i("PETICION VUELTA RAPIDA", nombrePiloto)
+
+            //Si existe acierto se realiza la operación de sumar puntos
             if(nombrePiloto == opcionElegida){
+                //Primero obtenemos valor del acierto
                 val requestPuntosPiloto = Request.Builder()
                         .url("http://192.168.1.14/?accion=obtenerpilotonombre&nombre=$opcionElegida")
                         .build()
@@ -102,10 +111,23 @@ class ConfirmarPorra : AppCompatActivity() {
                 val response2 = cliente.newCall(requestPuntosPiloto).enqueue(future2)
                 val json2 = JSONArray(future2.get()!!.body()!!.string())
                 val puntos = json2.getJSONObject(0)
-                        .getInt("VALORVUELTARAPIDA")
+                        .getDouble("VALORVUELTARAPIDA")
 
-                //TODO: Sumar puntos al usuario
-                Log.i("PUNTOS", puntos.toString())
+                //Obtenemos los puntos del usuario
+                val requestPuntosUsuario = Request.Builder()
+                        .url("http://192.168.1.14/?accion=obtenerusuariobyid&iduser=$idUser")
+                        .build()
+                val responsePuntosUsuario = cliente.newCall(requestPuntosUsuario).enqueue(futureDatosUser)
+                val jsonDatosUser = JSONArray(futureDatosUser.get()!!.body()!!.string())
+                val puntosActuales = jsonDatosUser.getJSONObject(0)
+                        .getDouble("Puntos")
+
+                //Calculamos los nuevos puntos y modificamos
+                val nuevosPuntos: Double = puntos + puntosActuales
+                val requestModificaPuntos = Request.Builder()
+                        .url("http://192.168.1.14/?accion=modificarpuntosusuario&iduser=$idUser&puntos=$nuevosPuntos")
+                        .build()
+                val responseModificaPuntos = cliente.newCall(requestModificaPuntos).enqueue(futureEditaPuntos)
             }
         }
         else if(modoPorra == "PitStop"){
@@ -159,5 +181,10 @@ class ConfirmarPorra : AppCompatActivity() {
         else if(modoPorra == "TOP3CarreraPiloto"){
 
         }
+
+        val volverPantallaLigas = Intent(this, PantallaLigas::class.java)
+        volverPantallaLigas.putExtra("CambiaGP", true)
+
+        startActivity(volverPantallaLigas)
     }
 }

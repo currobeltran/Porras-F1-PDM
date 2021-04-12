@@ -10,6 +10,7 @@ class PantallaOpcionesLiga : AppCompatActivity() {
     var idliga = -1
     var idRonda = -1
     var temporada = -1
+    var idUser = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,8 +18,7 @@ class PantallaOpcionesLiga : AppCompatActivity() {
         idliga = intent.getIntExtra("IDLiga",-1)
         idRonda = intent.getIntExtra("IDRonda", -1)
         temporada = intent.getIntExtra("Temporada", -1)
-        Log.i("TEMPORADA",temporada.toString())
-        Log.i("IDRONDA",idRonda.toString())
+        idUser = intent.getIntExtra("Usuario", -1)
     }
 
     fun verClasificacion(view: View){
@@ -32,6 +32,7 @@ class PantallaOpcionesLiga : AppCompatActivity() {
         val intentrealizaporra = Intent(this, MenuPorras::class.java)
         intentrealizaporra.putExtra("IDRonda", idRonda)
         intentrealizaporra.putExtra("Temporada", temporada)
+        intentrealizaporra.putExtra("Usuario", idUser)
 
         startActivity(intentrealizaporra)
     }
