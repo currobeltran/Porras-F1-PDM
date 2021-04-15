@@ -42,11 +42,6 @@ class ConfirmarPorra : AppCompatActivity() {
             textoOpcion.text = intent.getStringExtra("Opcion")
             opcionElegida = textoOpcion.text.toString()
         }
-        else if(modoPorra == "PitStop"){
-            textoModo.text = "El equipo con la parada más rápida será:"
-            textoOpcion.text = intent.getStringExtra("Opcion")
-            opcionElegida = textoOpcion.text.toString()
-        }
         else if(modoPorra == "TOPQualiEscuderia"){
             textoModo.text = "El equipo que se llevará la Pole Position será:"
             textoOpcion.text = intent.getStringExtra("Opcion")
@@ -114,9 +109,6 @@ class ConfirmarPorra : AppCompatActivity() {
 
                 modificaPuntosUsuario()
             }
-        }
-        else if(modoPorra == "PitStop"){
-
         }
         else if(modoPorra == "TOPQualiEscuderia"){
             val request = Request.Builder()

@@ -186,10 +186,7 @@ class RealizarPorra : AppCompatActivity() {
                 }
 
                 var valorEscuderia: TextView = TextView(this)
-                if(modo == "PitStop"){
-                    valorEscuderia.text = escuderia.getString("VALORPITSTOP")
-                }
-                else if(modo == "TOPQualiEscuderia"){
+                if(modo == "TOPQualiEscuderia"){
                     valorEscuderia.text = escuderia.getString("VALORCLASIFICACION")
                 }
                 else{
@@ -253,7 +250,7 @@ class RealizarPorra : AppCompatActivity() {
         if(modoPorra == "VueltaRapida"){
             intentConfirmarPorra.putExtra("Opcion", pilotoSeleccionado)
         }
-        else if(modoPorra == "PitStop" || modoPorra == "TOPQualiEscuderia" || modoPorra == "TOPCarreraEscuderia"){
+        else if(modoPorra == "TOPQualiEscuderia" || modoPorra == "TOPCarreraEscuderia"){
             intentConfirmarPorra.putExtra("Opcion", escuderiaSeleccionada)
         }
         else{

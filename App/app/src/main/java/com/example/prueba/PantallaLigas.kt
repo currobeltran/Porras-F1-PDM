@@ -104,11 +104,6 @@ class PantallaLigas : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun siguienteGranPremio(view: View){
-        pasarGP()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
     fun pasarGP(){
         val cliente: OkHttpClient = OkHttpClient()
         val future = CallbackFuture()

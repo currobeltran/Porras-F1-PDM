@@ -34,10 +34,6 @@ class MenuPorras : AppCompatActivity() {
             intentrealizaporra.putExtra("Titulo","Elija su top 3 para la carrera")
             intentrealizaporra.putExtra("Modo", "TOP3CarreraPiloto")
         }
-        else if(idboton == findViewById<Button>(R.id.pitstop).id){
-            intentrealizaporra.putExtra("Titulo","Elija quien hará la parada más rápida")
-            intentrealizaporra.putExtra("Modo", "PitStop")
-        }
         else if(idboton == findViewById<Button>(R.id.vueltarapida).id){
             intentrealizaporra.putExtra("Titulo","Elija quien hará la vuelta rápida")
             intentrealizaporra.putExtra("Modo", "VueltaRapida")
